@@ -103,7 +103,7 @@ export default function TokenPage({ nft, contractMetadata }: Props) {
             <Text fontWeight={"bold"}>Traits:</Text>
             <SimpleGrid columns={2} spacing={4}>
               {Object.entries(nft?.metadata?.attributes || {}).map(
-                ([key, value]) => (
+                ([key, value]: [string, any]) => (
                   <Flex key={key} direction={"column"} alignItems={"center"} justifyContent={"center"} borderWidth={1} p={"8px"} borderRadius={"4px"}>
                     <Text fontSize={"small"}>{value.trait_type}</Text>
                     <Text fontSize={"small"} fontWeight={"bold"}>{value.value}</Text>
@@ -204,7 +204,9 @@ export default function TokenPage({ nft, contractMetadata }: Props) {
 export const getStaticProps: GetStaticProps = async (context) => {
   const tokenId = context.params?.tokenId as string;
 
-  const sdk = new ThirdwebSDK("mumbai");
+  const sdk = new ThirdwebSDK("mumbai", {
+    clientId: process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID // server side ?
+  });
 
   const contract = await sdk.getContract(NFT_COLLECTION_ADDRESS);
 
@@ -216,6 +218,10 @@ export const getStaticProps: GetStaticProps = async (context) => {
     contractMetadata = await contract.metadata.get();
   } catch (e) { }
 
+  // Added because description not supported on ERC721 atm
+  if (contractMetadata && contractMetadata.description === undefined)
+    contractMetadata.description = "";
+
   return {
     props: {
       nft,
@@ -226,7 +232,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const sdk = new ThirdwebSDK("mumbai");
+  const sdk = new ThirdwebSDK("mumbai", {
+    clientId: process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID // server side ?
+  });
 
   const contract = await sdk.getContract(NFT_COLLECTION_ADDRESS);
 

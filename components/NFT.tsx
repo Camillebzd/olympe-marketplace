@@ -37,7 +37,10 @@ export default function NFTComponent({ nft }: Props) {
 
       <Box>
         {loadingMarketplace || loadingDirectListing || loadingAuction ? (
-          <Skeleton></Skeleton>
+          <Skeleton>
+            <Text fontSize={"small"}>TMP</Text>
+            <Text fontSize={"small"}>TMP</Text>
+          </Skeleton>
         ) : directListing && directListing[0] ? (
           <Box>
             <Flex direction={"column"}>

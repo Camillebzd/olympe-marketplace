@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 const MENU_LIST = [
   { text: "Buy", href: "/buy" },
   { text: "Sell", href: "/sell" },
+  { text: "Mint", href: "/mint" },
 ];
 
 export function Navbar() {
