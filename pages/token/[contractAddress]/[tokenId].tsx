@@ -241,7 +241,7 @@ export default function TokenPage({ nft, contractMetadata }: Props) {
 export const getStaticProps: GetStaticProps = async (context) => {
   const tokenId = context.params?.tokenId as string;
 
-  const sdk = new ThirdwebSDK("mumbai", {
+  const sdk = new ThirdwebSDK(process.env.NEXT_PUBLIC_CHAIN_NAME || "mumbai", {
     clientId: process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID // server side ?
   });
 
@@ -269,7 +269,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const sdk = new ThirdwebSDK("mumbai", {
+  const sdk = new ThirdwebSDK(process.env.NEXT_PUBLIC_CHAIN_NAME || "mumbai", {
     clientId: process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID // server side ?
   });
 
