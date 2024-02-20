@@ -102,8 +102,8 @@ export default function SaleInfo({ nft }: Props) {
       defaultValues: {
         nftContractAddress: NFT_COLLECTION_ADDRESS,
         tokenId: nft.metadata.id,
-        startDate: new Date(),
-        endDate: new Date(),
+        startDate: new Date(NaN), // represent empty date
+        endDate: new Date(NaN), // represent empty date
         floorPrice: "0",
         buyoutPrice: "0",
       },
@@ -111,6 +111,9 @@ export default function SaleInfo({ nft }: Props) {
 
   async function handleSubmissionAuction(data: AuctionFormData) {
     await checkAndProvideApproval();
+    // Recreate date type if string was passed
+    data.startDate = new Date(data.startDate);
+    data.endDate = new Date(data.endDate);    
     const txResult = await createAuctionListing({
       assetContractAddress: data.nftContractAddress,
       tokenId: data.tokenId,
