@@ -4,27 +4,41 @@ import NFTGrid from "../components/NFTGrid";
 import { NFT_COLLECTION_ADDRESS } from "../const/addresses";
 import { SmartContract, Web3Button, useContract, useNFTs } from "@thirdweb-dev/react";
 import EtherlinkGenerator from "../const/EtherlinkGenerator.json";
+import { useToast } from '@chakra-ui/react';
 
 const CONTRACT_ABI = EtherlinkGenerator.abi;
 
 export default function Mint() {
-  // const { contract } = useContract(NFT_COLLECTION_ADDRESS);
+  const toast = useToast();
   const [logoColor, setLogoColor] = useState("B6FEDA");
   const [backgroundColor, setBackgroundColor] = useState("000000");
 
   const mintNFT = async (contract: SmartContract) => {
-    await contract?.call(
-      "safeMint",
-      [
-        "#" + logoColor,
-        "#" + backgroundColor
-      ]
-    );
-
-    const result = await contract?.call(
-      "totalSupply"
-    );
-    console.log("RESULT:", result);
+    try {
+      await contract?.call(
+        "safeMint",
+        [
+          "#" + logoColor,
+          "#" + backgroundColor
+        ]
+      );
+      toast({
+        title: 'Mint succeeded.',
+        description: "You created your NFT.",
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch(e) {
+      toast({
+        title: 'Mint failed.',
+        description: "Something went wrong during the mint, see console for debug.",
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      console.log("Error:", e);
+    }
   };
 
   const EtherlinkSVGRender = () => {

@@ -1,4 +1,4 @@
-import { Avatar, Box, Container, Flex, Input, SimpleGrid, Skeleton, Stack, Text } from "@chakra-ui/react";
+import { Avatar, Box, Container, Flex, Input, SimpleGrid, Skeleton, Stack, Text, useToast } from "@chakra-ui/react";
 import { MediaRenderer, ThirdwebNftMedia, Web3Button, useContract, useMinimumNextBid, useValidDirectListings, useValidEnglishAuctions } from "@thirdweb-dev/react";
 import { NFT, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import React, { useState } from "react";
@@ -15,6 +15,7 @@ type Props = {
 };
 
 export default function TokenPage({ nft, contractMetadata }: Props) {
+  const toast = useToast();
   const { contract: marketplace, isLoading: loadingMarketplace } =
     useContract(
       MARKETPLACE_ADDRESS,
@@ -175,6 +176,24 @@ export default function TokenPage({ nft, contractMetadata }: Props) {
                 contractAddress={MARKETPLACE_ADDRESS}
                 action={async () => buyListing()}
                 isDisabled={(!auctionListing || !auctionListing[0]) && (!directListing || !directListing[0])}
+                onSuccess={() => {
+                  toast({
+                    title: 'Transfer succeed.',
+                    description: "You successfully buyed this NFT from directly listing.",
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                  });
+                }}
+                onError={() => {
+                  toast({
+                    title: 'Transfer failed.',
+                    description: "The NFT buying process failed.",
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                  });
+                }}
               >Buy at asking price</Web3Button>
               <Text textAlign={"center"}>or</Text>
               <Flex direction={"column"}>
@@ -190,6 +209,24 @@ export default function TokenPage({ nft, contractMetadata }: Props) {
                   contractAddress={MARKETPLACE_ADDRESS}
                   action={async () => await createBidOffer()}
                   isDisabled={!auctionListing || !auctionListing[0]}
+                  onSuccess={() => {
+                    toast({
+                      title: 'Transfer succeed.',
+                      description: "You successfully buyed this NFT from directly listing.",
+                      status: 'success',
+                      duration: 5000,
+                      isClosable: true,
+                    });
+                  }}
+                  onError={() => {
+                    toast({
+                      title: 'Transfer failed.',
+                      description: "The NFT buying process failed.",
+                      status: 'error',
+                      duration: 5000,
+                      isClosable: true,
+                    });
+                  }}
                 >Place Bid</Web3Button>
               </Flex>
             </Stack>
