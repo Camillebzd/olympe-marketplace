@@ -1,4 +1,13 @@
-import { DirectListingV3, EnglishAuction, useContract, useNFTs, useValidDirectListings, useValidEnglishAuctions } from "@thirdweb-dev/react";
+import { 
+  DirectListingV3,
+  EnglishAuction,
+  useAddress,
+  useContract,
+  useValidDirectListings,
+  useValidEnglishAuctions,
+  useOwnedNFTs,
+  NFT
+} from "@thirdweb-dev/react";
 import { NFT_COLLECTION_ADDRESS, MARKETPLACE_ADDRESS } from "../const/addresses";
 import { useEffect, useState } from "react";
 
@@ -17,21 +26,51 @@ export function useCustomListing() {
     useValidEnglishAuctions(marketplace, { tokenContract: NFT_COLLECTION_ADDRESS });
 
   // Both Direct listing and English auction
-  const [ listing, setListing ] = useState<(DirectListingV3 | EnglishAuction)[]>([]);
-  const [ isLoading, setIsLoading ] = useState(true);
+  type Listing = {
+    data: (DirectListingV3 | EnglishAuction)[],
+    isLoading: boolean
+  }
+  const [ listing, setListing ] = useState<Listing>({data: [], isLoading: true});
 
   useEffect(() => {
     if (loadingAuction || loadingDirectListings)
       return;
     if (directListings && auctionListing) {
-      setListing([...directListings, ...auctionListing]);
+      setListing({data: [...directListings, ...auctionListing], isLoading: false});
     } else if (directListings) {
-      setListing(directListings);
+      setListing({data: directListings, isLoading: false});
     } else if (auctionListing) {
-      setListing(auctionListing);
+      setListing({data: auctionListing, isLoading: false});
     }
-    setIsLoading(false);
   }, [directListings, auctionListing, loadingDirectListings, loadingAuction]);
 
-  return {listing, isLoading};
+  return listing;
+}
+
+export function useSalableNFTs() {
+  const {data: listing, isLoading: loadingList} = useCustomListing();
+  const address = useAddress();
+  const { contract } = useContract(NFT_COLLECTION_ADDRESS);
+  const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs(contract, address);
+
+  type SalableNFT = {
+    data: NFT[],
+    isLoading: boolean
+  }
+  const [ salableNFTs, setSalableNFTs ] = useState<SalableNFT>({data: [], isLoading: true});
+
+  useEffect(() => {
+    if (loadingList || loadingOwnedNFTs)
+      return;
+    let salables = ownedNFTs?.filter((nft) => {
+      if (listing.find((elem) => elem.tokenId === nft.metadata.id))
+        return false;
+      return true;
+    });
+    if (salables == undefined)
+      salables = [];
+    setSalableNFTs({data: salables, isLoading: false});
+  }, [ownedNFTs, listing, loadingList, loadingOwnedNFTs]);
+
+  return salableNFTs;
 }

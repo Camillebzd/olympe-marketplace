@@ -4,7 +4,7 @@ import { useCustomListing } from "../hooks/custom";
 import ListingGrid from "../components/ListingGrid";
 
 export default function Buy() {
-  const { listing, isLoading } = useCustomListing();
+  const { data: listing, isLoading } = useCustomListing();
 
   return (
     <Container maxW={"1200px"} p={5}>
