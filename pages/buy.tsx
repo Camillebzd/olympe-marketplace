@@ -1,21 +1,19 @@
 import React from "react";
 import { Container, Heading, Text } from "@chakra-ui/react";
-import NFTGrid from "../components/NFTGrid";
-import { NFT_COLLECTION_ADDRESS } from "../const/addresses";
-import { useContract, useNFTs } from "@thirdweb-dev/react";
+import { useCustomListing } from "../hooks/custom";
+import ListingGrid from "../components/ListingGrid";
 
 export default function Buy() {
-  const { contract } = useContract(NFT_COLLECTION_ADDRESS);
-  const { data, isLoading } = useNFTs(contract);
+  const { listing, isLoading } = useCustomListing();
 
   return (
     <Container maxW={"1200px"} p={5}>
       <Heading>Buy NFTs</Heading>
       <Text>Browse and buy NFTs from this collection.</Text>
-      <NFTGrid 
+      <ListingGrid 
         isLoading={isLoading} 
-        data={data} 
-        emptyText={"No NFTs found"}
+        data={listing} 
+        emptyText={"No NFTs for sale"}
       />
     </Container>
   )
