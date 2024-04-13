@@ -8,6 +8,7 @@ import {
 } from "../../../const/addresses";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
+import { EtherlinkTestnet } from "@thirdweb-dev/chains"
 
 type Props = {
   nft: NFT;
@@ -241,7 +242,8 @@ export default function TokenPage({ nft, contractMetadata }: Props) {
 export const getStaticProps: GetStaticProps = async (context) => {
   const tokenId = context.params?.tokenId as string;
 
-  const sdk = new ThirdwebSDK(process.env.NEXT_PUBLIC_CHAIN_NAME || "mumbai", {
+  // modify here if needed
+  const sdk = new ThirdwebSDK(EtherlinkTestnet, {
     clientId: process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID // server side ?
   });
 
@@ -269,7 +271,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const sdk = new ThirdwebSDK(process.env.NEXT_PUBLIC_CHAIN_NAME || "mumbai", {
+  // modify here if needed
+  const sdk = new ThirdwebSDK(EtherlinkTestnet, {
     clientId: process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID // server side ?
   });
 

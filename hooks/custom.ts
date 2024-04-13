@@ -41,6 +41,8 @@ export function useCustomListing() {
       setListing({data: directListings, isLoading: false});
     } else if (auctionListing) {
       setListing({data: auctionListing, isLoading: false});
+    } else {
+      setListing({data: [], isLoading: false});
     }
   }, [directListings, auctionListing, loadingDirectListings, loadingAuction]);
 
@@ -60,6 +62,10 @@ export function useSalableNFTs() {
   const [ salableNFTs, setSalableNFTs ] = useState<SalableNFT>({data: [], isLoading: true});
 
   useEffect(() => {
+    if (!address) {
+      setSalableNFTs({data: [], isLoading: false});
+      return;
+    }
     if (loadingList || loadingOwnedNFTs)
       return;
     let salables = ownedNFTs?.filter((nft) => {
@@ -70,7 +76,7 @@ export function useSalableNFTs() {
     if (salables == undefined)
       salables = [];
     setSalableNFTs({data: salables, isLoading: false});
-  }, [ownedNFTs, listing, loadingList, loadingOwnedNFTs]);
+  }, [ownedNFTs, listing, loadingList, loadingOwnedNFTs, address]);
 
   return salableNFTs;
 }

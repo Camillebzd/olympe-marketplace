@@ -3,17 +3,18 @@ import { ThirdwebProvider } from "@thirdweb-dev/react";
 import "../styles/globals.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Navbar } from "../components/Navbar";
+import { EtherlinkTestnet } from "@thirdweb-dev/chains"
 
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
 // You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
-const activeChain = process.env.NEXT_PUBLIC_CHAIN_NAME;
+// const activeChain = process.env.NEXT_PUBLIC_CHAIN_NAME;
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThirdwebProvider
       clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
-      activeChain={activeChain}
+      activeChain={EtherlinkTestnet}
     >
       <ChakraProvider>
         <Navbar />
