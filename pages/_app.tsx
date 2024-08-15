@@ -15,6 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ThirdwebProvider
       clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
       activeChain={EtherlinkTestnet}
+      supportedChains={[EtherlinkTestnet]}
     >
       <ChakraProvider>
         <Navbar />

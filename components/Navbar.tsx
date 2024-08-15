@@ -33,7 +33,7 @@ export function Navbar() {
           {MENU_LIST.map(elem => <NavItem key={elem.text} text={elem.text} href={elem.href} isActive={activeSection === elem.href} />)}
         </Flex>
         <Flex dir={"row"} alignItems={"center"}>
-          <ConnectWallet />
+          <ConnectWallet switchToActiveChain={true} />
           {address && (
             <Link as={NextLink} href={`/profile/${address}`}>
               <Avatar src='https://bit.ly/broken-link' ml={"20px"} />
